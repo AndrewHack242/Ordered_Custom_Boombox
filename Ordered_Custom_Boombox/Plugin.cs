@@ -38,6 +38,7 @@ namespace Ordered_Custom_Boombox
 
             harmony.PatchAll(typeof(Ordered_custom_boombox_base));
             harmony.PatchAll(typeof(Patches.Boombox_start_music_patch));
+            harmony.PatchAll(typeof(Netcode.Sync_track_num)); // todo remove the specifics here
         }
 
         internal static void LogDebug(string message)

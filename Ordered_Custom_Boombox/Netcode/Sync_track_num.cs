@@ -31,10 +31,12 @@ namespace Ordered_Custom_Boombox.Netcode
         {
             if (NetworkManager.Singleton.IsServer)
             {
+                Ordered_custom_boombox_base.LogInfo("Set up track number sync in server");
                 NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler("Ordered_Custom_Boombox.Receive_server_set_track_num_rpc", Receive_server_set_track_num_rpc);
             }
             else if (NetworkManager.Singleton.IsClient)
             {
+                Ordered_custom_boombox_base.LogInfo("Set up track number sync in client");
                 NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler("Ordered_Custom_Boombox.Receive_client_set_track_num_rpc", Receive_client_set_track_num_rpc);
             }
             Client_send_sync_request_to_server();
@@ -44,6 +46,7 @@ namespace Ordered_Custom_Boombox.Netcode
         {
             if (!NetworkManager.Singleton.IsClient)
             {
+                Ordered_custom_boombox_base.LogWarning("[Client_send_sync_request_to_server] Not a client?");
                 return;
             }
             if (NetworkManager.Singleton.IsServer)
@@ -55,7 +58,7 @@ namespace Ordered_Custom_Boombox.Netcode
             FastBufferWriter messageStream = new FastBufferWriter(4, Allocator.Temp);
             int value = get_track_num();
             messageStream.WriteValue(in value, default(FastBufferWriter.ForPrimitives));
-            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage("TooManyEmotes.PerformEmoteServerRpc", 0uL, messageStream);
+            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage("Ordered_Custom_Boombox.Receive_server_set_track_num_rpc", 0uL, messageStream);
         }
 
         private static void Receive_server_set_track_num_rpc(ulong clientId, FastBufferReader reader)
