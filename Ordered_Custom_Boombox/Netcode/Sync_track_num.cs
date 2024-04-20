@@ -7,8 +7,6 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using Unity.Collections;
 using Unity.Netcode;
-using Ordered_Custom_Boombox;
-using Zeekerss.Core.Singletons;
 
 namespace Ordered_Custom_Boombox.Netcode
 {

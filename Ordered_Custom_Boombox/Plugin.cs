@@ -7,8 +7,6 @@ using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 
-//todo make into not infinite sprint
-
 namespace Ordered_Custom_Boombox
 {
     [BepInPlugin(mod_GUID, mod_name, mod_version)]
@@ -16,7 +14,7 @@ namespace Ordered_Custom_Boombox
     {
         private const string mod_GUID = "Hackattack242.Ordered_Custom_Boombox";
         private const string mod_name = "Ordered Custom Boombox";
-        private const string mod_version = "0.0.1";
+        private const string mod_version = "1.0.0";
 
         private readonly Harmony harmony = new Harmony(mod_GUID);
 
@@ -34,7 +32,7 @@ namespace Ordered_Custom_Boombox
 
             logger = BepInEx.Logging.Logger.CreateLogSource(mod_name);
 
-            logger.LogInfo("Sample mod has awakened! :D");
+            logger.LogInfo("Ordered Custom Boombox has awoken");
 
             harmony.PatchAll(typeof(Ordered_custom_boombox_base));
             harmony.PatchAll(typeof(Patches.Boombox_start_music_patch));

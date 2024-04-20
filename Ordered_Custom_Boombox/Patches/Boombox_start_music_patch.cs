@@ -38,22 +38,18 @@ namespace Ordered_Custom_Boombox.Patches
                 // todo don't hardcode these indices
                 if (codes[i].opcode == OpCodes.Ldfld && i == 7)
                 {
-                    Ordered_custom_boombox_base.LogInfo(codes[i - 1].ToString());
-                    Ordered_custom_boombox_base.LogInfo(codes[i].ToString());
+                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i - 1].ToString());
+                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     codes[i - 1] = new CodeInstruction(OpCodes.Nop);
                     codes[i] = new CodeInstruction(OpCodes.Nop);
-                    Ordered_custom_boombox_base.LogInfo("new: " + codes[i - 1].ToString());
-                    Ordered_custom_boombox_base.LogInfo("new: " + codes[i].ToString());
                 }
                 else if (codes[i].Calls(typeof(Random).GetMethod("Next", new Type[] { typeof(Int32), typeof(Int32) })))
                 {
-                    Ordered_custom_boombox_base.LogInfo(codes[i].ToString());
+                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     var classtype = typeof(Boombox_start_music_patch);
                     var funcname = nameof(Boombox_start_music_patch.next_track);
-                    Ordered_custom_boombox_base.LogInfo(classtype.ToString());
-                    Ordered_custom_boombox_base.LogInfo(funcname.ToString());
                     codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(Int32), typeof(Int32) }));
-                    Ordered_custom_boombox_base.LogInfo("new: " + codes[i].ToString());
+                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
                 }
             }
 
