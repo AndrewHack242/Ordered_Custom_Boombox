@@ -14,7 +14,7 @@ namespace Ordered_Custom_Boombox.Patches
     internal class Boombox_start_music_patch
     {
 
-        private static int track_num = 0;
+        internal static int track_num = 1000000000;
         public static int next_track(int unused, int length)
         {
             track_num++;
@@ -61,3 +61,5 @@ namespace Ordered_Custom_Boombox.Patches
         }
     }
 }
+
+
