@@ -15,7 +15,7 @@ namespace Ordered_Custom_Boombox.Patches
     {
 
         internal static int track_num = 1000000000;
-        public static int next_track(int unused, int length)
+        public static int next_track(int length)
         {
             track_num++;
             if (track_num >= length)
@@ -39,15 +39,17 @@ namespace Ordered_Custom_Boombox.Patches
                 {
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i - 1].ToString());
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
+                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i+1].ToString());
                     codes[i - 1] = new CodeInstruction(OpCodes.Nop);
                     codes[i] = new CodeInstruction(OpCodes.Nop);
+                    codes[i+1] = new CodeInstruction(OpCodes.Nop);
                 }
                 else if (codes[i].Calls(typeof(Random).GetMethod("Next", new Type[] { typeof(Int32), typeof(Int32) })))
                 {
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     var classtype = typeof(Boombox_start_music_patch);
                     var funcname = nameof(Boombox_start_music_patch.next_track);
-                    codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(Int32), typeof(Int32) }));
+                    codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(Int32) }));
                     Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
                 }
             }
