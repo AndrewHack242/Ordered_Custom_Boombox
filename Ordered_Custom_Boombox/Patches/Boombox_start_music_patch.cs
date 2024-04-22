@@ -35,8 +35,7 @@ namespace Ordered_Custom_Boombox.Patches
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; ++i)
             {
-                // todo don't hardcode these indices
-                if (codes[i].opcode == OpCodes.Ldfld && i == 7)
+                if (codes[i].opcode == OpCodes.Ldfld && (System.Reflection.FieldInfo)codes[i].operand == AccessTools.Field(typeof(BoomboxItem), "musicRandomizer"))
                 {
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i - 1].ToString());
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());

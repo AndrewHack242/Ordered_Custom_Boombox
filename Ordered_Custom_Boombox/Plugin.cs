@@ -14,7 +14,7 @@ namespace Ordered_Custom_Boombox
     {
         private const string mod_GUID = "Hackattack242.Ordered_Custom_Boombox";
         private const string mod_name = "Ordered Custom Boombox";
-        private const string mod_version = "1.0.0";
+        private const string mod_version = "1.0.1";
 
         private readonly Harmony harmony = new Harmony(mod_GUID);
 
@@ -34,9 +34,7 @@ namespace Ordered_Custom_Boombox
 
             logger.LogInfo("Ordered Custom Boombox has awoken");
 
-            harmony.PatchAll(typeof(Ordered_custom_boombox_base));
-            harmony.PatchAll(typeof(Patches.Boombox_start_music_patch));
-            harmony.PatchAll(typeof(Netcode.Sync_track_num)); // todo remove the specifics here
+            harmony.PatchAll();
         }
 
         internal static void LogDebug(string message)
