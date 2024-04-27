@@ -29,9 +29,6 @@ namespace Ordered_Custom_Boombox.Patches
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> patch_start_music(IEnumerable<CodeInstruction> instructions)
         {
-            int a = 0;
-            int b = 1;
-            int c = b + a;
             var codes = new List<CodeInstruction>(instructions);
             for (int i = 0; i < codes.Count; ++i)
             {
