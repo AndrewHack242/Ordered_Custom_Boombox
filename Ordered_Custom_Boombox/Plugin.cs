@@ -14,7 +14,7 @@ namespace Ordered_Custom_Boombox
     {
         private const string mod_GUID = "Hackattack242.Ordered_Custom_Boombox";
         private const string mod_name = "Ordered Custom Boombox";
-        private const string mod_version = "1.0.1";
+        private const string mod_version = "1.1.0";
 
         private readonly Harmony harmony = new Harmony(mod_GUID);
 
@@ -32,7 +32,7 @@ namespace Ordered_Custom_Boombox
 
             logger = BepInEx.Logging.Logger.CreateLogSource(mod_name);
 
-            logger.LogInfo("Ordered Custom Boombox has awoken");
+            logger.LogInfo(mod_name + " has awoken");
 
             harmony.PatchAll();
         }

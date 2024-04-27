@@ -22,8 +22,42 @@ namespace Ordered_Custom_Boombox.Patches
             {
                 track_num = 0;
             }
+            if (track_num < 0)
+            {
+                track_num = length - 1;
+            }
             return track_num;
         }
+        public static int prev_track(int length)
+        {
+            track_num--;
+            if (track_num < 0)
+            {
+                track_num = length - 1;
+            }
+            if (track_num >= length)
+            {
+                track_num = 0;
+            }
+            return track_num;
+        }
+
+        [HarmonyPatch("Start")]
+        [HarmonyPostfix]
+        static void patch_boombox_start(ref BoomboxItem __instance)
+        {
+            __instance.itemProperties.syncInteractLRFunction = true;
+            string[] new_toolTips = new string[__instance.itemProperties.toolTips.Length + 2];
+            for (int i = 0; i < __instance.itemProperties.toolTips.Length; ++i)
+            {
+                new_toolTips[i] = __instance.itemProperties.toolTips[i];
+            }
+            new_toolTips[__instance.itemProperties.toolTips.Length] = "Prev Song: [Q]";
+            new_toolTips[__instance.itemProperties.toolTips.Length + 1] = "Next Song: [E]";
+            __instance.itemProperties.toolTips = new_toolTips;
+        }
+
+
 
         [HarmonyPatch("StartMusic")]
         [HarmonyTranspiler]
