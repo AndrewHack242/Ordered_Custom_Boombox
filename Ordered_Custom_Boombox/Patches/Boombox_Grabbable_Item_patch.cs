@@ -18,19 +18,14 @@ namespace Ordered_Custom_Boombox.Patches
         {
             if (__instance is BoomboxItem)
             {
-                if ((bool)__args[0])
+                if (!(bool)__args[0])
                 {
-                    ((BoomboxItem)__instance).ItemActivate(false);
-                    ((BoomboxItem)__instance).ItemActivate(true);
+                    // todo need to do this as two calls or it is incapable of going past the first song - probably should work with one call
+                    Boombox_start_music_patch.seek_track(__instance.NetworkObjectId, -1, ((BoomboxItem)__instance).musicAudios.Length);
+                    Boombox_start_music_patch.seek_track(__instance.NetworkObjectId, -1, ((BoomboxItem)__instance).musicAudios.Length);
                 }
-                else
-                {
-                    Boombox_start_music_patch.prev_track(((BoomboxItem)__instance).musicAudios.Length);
-                    Boombox_start_music_patch.prev_track(((BoomboxItem)__instance).musicAudios.Length);
-                    ((BoomboxItem)__instance).ItemActivate(false);
-                    ((BoomboxItem)__instance).ItemActivate(true);
-
-                }
+                ((BoomboxItem)__instance).ItemActivate(false);
+                ((BoomboxItem)__instance).ItemActivate(true);
             }
         }
 

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using HarmonyLib;
+using Unity.Netcode;
 using UnityEngine.Rendering;
 
 namespace Ordered_Custom_Boombox.Patches
@@ -14,32 +17,32 @@ namespace Ordered_Custom_Boombox.Patches
     internal class Boombox_start_music_patch
     {
 
-        internal static int track_num = 1000000000;
-        public static int next_track(int length)
+        internal static Dictionary<ulong, int> track_num_map = new Dictionary<ulong, int>();
+        public static int seek_track(ulong bbox_id, int seek_amount, int length)
         {
-            track_num++;
-            if (track_num >= length)
+            if (!track_num_map.ContainsKey(bbox_id))
             {
-                track_num = 0;
+                track_num_map.Add(bbox_id, 10000000);
             }
-            if (track_num < 0)
+            track_num_map[bbox_id] += seek_amount;
+            if (track_num_map[bbox_id] >= length)
             {
-                track_num = length - 1;
+                track_num_map[bbox_id] = 0;
             }
-            return track_num;
+            if (track_num_map[bbox_id] < 0)
+            {
+                track_num_map[bbox_id] = length - 1;
+            }
+            return track_num_map[bbox_id];
         }
-        public static int prev_track(int length)
+
+        public static IEnumerable<ulong> get_all_bbox_ids()
         {
-            track_num--;
-            if (track_num < 0)
+            foreach (var key in track_num_map.Keys)
             {
-                track_num = length - 1;
+                Ordered_custom_boombox_base.LogInfo("key: " + key);
             }
-            if (track_num >= length)
-            {
-                track_num = 0;
-            }
-            return track_num;
+            return track_num_map.Keys;
         }
 
         [HarmonyPatch("Start")]
@@ -68,19 +71,19 @@ namespace Ordered_Custom_Boombox.Patches
             {
                 if (codes[i].opcode == OpCodes.Ldfld && (System.Reflection.FieldInfo)codes[i].operand == AccessTools.Field(typeof(BoomboxItem), "musicRandomizer"))
                 {
-                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i - 1].ToString());
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i+1].ToString());
-                    codes[i - 1] = new CodeInstruction(OpCodes.Nop);
-                    codes[i] = new CodeInstruction(OpCodes.Nop);
-                    codes[i+1] = new CodeInstruction(OpCodes.Nop);
+                    codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Property(typeof(NetworkBehaviour), nameof(NetworkBehaviour.NetworkObjectId)).GetGetMethod());
+                    codes[i+1] = new CodeInstruction(OpCodes.Ldc_I4_1);
+                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
+                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i+1].ToString());
                 }
                 else if (codes[i].Calls(typeof(Random).GetMethod("Next", new Type[] { typeof(Int32), typeof(Int32) })))
                 {
                     Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     var classtype = typeof(Boombox_start_music_patch);
-                    var funcname = nameof(Boombox_start_music_patch.next_track);
-                    codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(Int32) }));
+                    var funcname = nameof(Boombox_start_music_patch.seek_track);
+                    codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(ulong), typeof(Int32), typeof(Int32) }));
                     Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
                 }
             }
