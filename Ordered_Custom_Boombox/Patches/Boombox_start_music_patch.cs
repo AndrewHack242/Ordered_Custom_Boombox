@@ -71,20 +71,20 @@ namespace Ordered_Custom_Boombox.Patches
             {
                 if (codes[i].opcode == OpCodes.Ldfld && (System.Reflection.FieldInfo)codes[i].operand == AccessTools.Field(typeof(BoomboxItem), "musicRandomizer"))
                 {
-                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
-                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i+1].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i+1].ToString());
                     codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Property(typeof(NetworkBehaviour), nameof(NetworkBehaviour.NetworkObjectId)).GetGetMethod());
                     codes[i+1] = new CodeInstruction(OpCodes.Ldc_I4_1);
-                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
-                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i+1].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("With: " + codes[i+1].ToString());
                 }
                 else if (codes[i].Calls(typeof(Random).GetMethod("Next", new Type[] { typeof(Int32), typeof(Int32) })))
                 {
-                    Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("Replacing " + codes[i].ToString());
                     var classtype = typeof(Boombox_start_music_patch);
                     var funcname = nameof(Boombox_start_music_patch.seek_track);
                     codes[i] = new CodeInstruction(OpCodes.Call, AccessTools.Method(classtype, funcname, new Type[] { typeof(ulong), typeof(Int32), typeof(Int32) }));
-                    Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
+                    //Ordered_custom_boombox_base.LogInfo("With: " + codes[i].ToString());
                 }
             }
 
